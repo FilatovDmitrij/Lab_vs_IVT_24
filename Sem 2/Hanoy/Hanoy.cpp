@@ -41,7 +41,7 @@ void move(int n, char from, char to, char tmp)
 }
 
 int main() {
-    setlocale(0, "");
+    setlocale(LC_ALL, "ru");
     int n;
 
     cout << "Кол-во колец (1-" << MAX << "): ";
