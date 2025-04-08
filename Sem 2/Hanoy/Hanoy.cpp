@@ -40,7 +40,8 @@ void move(int n, char from, char to, char tmp)
     move(n - 1, tmp, to, from);
 }
 
-int main() {
+int main() 
+{
     setlocale(LC_ALL, "ru");
     int n;
 
@@ -48,12 +49,14 @@ int main() {
     cin >> n;
     cout << endl;
 
-    if (n < 1 || n > MAX) {
+    if (n < 1 || n > MAX) 
+    {
         cout << "Неверно!" << endl;
         return 1;
     }
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) 
+    {
         t[0][i] = n - i;
     }
     h[0] = n;
