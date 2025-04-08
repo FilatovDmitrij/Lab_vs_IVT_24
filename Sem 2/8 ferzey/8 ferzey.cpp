@@ -1,48 +1,86 @@
 #include <iostream>
-#include <ctime>
-#include <cstdlib>
-
 using namespace std;
 
-int main()
+int desk[8][8]; 
+const int Q = -1; 
+
+void clearDesk() 
 {
-	setlocale(LC_ALL, "ru");
-	srand(time(NULL));
+    for(int i = 0; i < 8; i++)
+        for(int j = 0; j < 8; j++)
+            desk[i][j] = 0;
+}
 
-	const int len = 10;
-	int arr[len]{};
-	int tmp;
-	int range_min = 0, range_max = 10;
-
-	for (int i = 0; i < len; ++i)
+void printDesk() 
+{
+    for(int i = 0; i < 8; i++) 
+    {
+        for(int j = 0; j < 8; j++) 
 	{
-		arr[i] = rand() % (range_max - range_min + 1) + range_min;
-	}
+            if(desk[i][j] == Q) cout << "Q ";
+            else cout << ". ";
+        }
+        cout << endl;
+    }
+}
 
-	for (int i = 0; i < len; ++i)
+void placeQ(int row, int col) 
+{
+    for(int x = 0; x < 8; x++) 
+    {
+        desk[x][col]++; 
+        desk[row][x]++;
+        int d1 = col - row + x;
+        if(d1 >= 0 && d1 < 8) desk[x][d1]++;
+        
+        int d2 = col + row - x;
+        if(d2 >= 0 && d2 < 8) desk[x][d2]++;
+    }
+    desk[row][col] = Q;
+}
+
+void removeQ(int row, int col) 
+{
+    for(int x = 0; x < 8; x++) 
+    {
+        desk[x][col]--;
+        desk[row][x]--;
+
+        int d1 = col - row + x;
+        if(d1 >= 0 && d1 < 8) desk[x][d1]--;
+        
+        int d2 = col + row - x;
+        if(d2 >= 0 && d2 < 8) desk[x][d2]--;
+    }
+    desk[row][col] = 0;
+}
+bool tryPlace(int row) 
+{
+    for(int col = 0; col < 8; col++) 
+    {
+        if(desk[row][col] == 0) 
 	{
-		cout << arr[i] << ' ';
-	}
-	cout << endl;
+            placeQ(row, col); 
+            
+            if(row == 7 || tryPlace(row + 1)) 
+                return true;
+                
+            removeQ(row, col); // Откат
+        }
+    }
+    return false;
+}
 
-	for (int i = 0; i < len-1; ++i)
-	{
-		for (int j = 0; j < (len - 1 - i); ++j) 
-		{
-			if (arr[j] > arr[j + 1])
-			{
-				tmp = arr[j];
-				arr[j] = arr[j + 1];
-				arr[j + 1] = tmp;
-			}
-		}
-	}
-
-	for (int i = 0; i < len; ++i)
-	{
-		cout << arr[i] << ' ';
-	}
-	cout << endl;
-
-	return 0;
+int main() 
+{
+    clearDesk();
+    if(tryPlace(0)) 
+    {
+        cout << "Решение найдено:\n";
+        printDesk();
+    } else 
+    {
+        cout << "Решение не найдено!\n";
+    }
+    return 0;
 }
